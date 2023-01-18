@@ -9,5 +9,19 @@ async function viewAllEmployees() {
         console.log(err)
     }
 } 
+async function addEmployees(){
+    [
+        type =  choice,
+        input = 'AddEmployee(s)',
+        choice = 
+            'SALES', 
+            'FINANCE', 
+            'LEGAL', 
+            'ENGINEERING' 
+    ]
+}
+async function removeEmployeees(){ 
+    
+}
 
 module.exports = { viewAllEmployees }
