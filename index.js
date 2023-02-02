@@ -1,8 +1,9 @@
 
 const { prompt } = require("inquirer");
 const db = require("./db/connection");
-const { viewAllDepartments } = require('./db/departments');
-const { viewAllEmployees } = require('./db/employees');
+const { viewAllDepartments, AddDepartment, RemoveDepartment } = require('./db/departments');
+const { viewAllEmployees, removeEmployee, addEmployees  } = require('./db/employees');
+const { viewAllRoles, AddRole, RemoveRoles } = require('./db/roles');
 // Using the async will help to avoid using .then() methods
 const start = async () => {
     console.log("Welcome to the Employee Manager!");
@@ -16,12 +17,12 @@ const start = async () => {
                 'View all roles', 
                 'View all employees', 
                 'Add new department',
-                'Add a role', 
+                'Add new role', 
                 'Add an employee', 
                 'Update an employee role', 
                 'Delete a department', 
                 'Delete a Role',  
-                'Delete an Employee',
+                'Remove Employee',
                 'Exit', 
             ]
         }
@@ -38,32 +39,36 @@ const start = async () => {
             console.table(Employee)
             break;
 
-        case 'View all role': 
+        case 'View all roles': 
             const Role = await viewAllRoles () 
             console.table(Role)
             break; 
-        case 'Add New department':
-            const NewDepartment = await NewDepartment()
+        case 'Add new department':
+            const NewDepartment = await AddDepartment()
             console.table(NewDepartment)
             break;
-        case 'Add New Role': 
-            const NewRole = await addnewrole()
+        case 'Add new role': 
+            const NewRole = await AddRole()
             console.table(NewRole) 
             break; 
-        case 'Add New Employee': 
-            const NewEmployee = await NewEmployee()
-            console.table(NewEmployee) 
-            break; 
-        case 'Remove Employee': 
-            const RemoveEmployee = await RemoveEmployee() 
-            console.table(RemoveEmployee) 
+        case 'Update an employee role': 
+            const UpdateEmployee = await UpdateEmployee()
+            console.table(UpdateEmployee) 
             break;
-        case 'Delete a Department': 
-            const DeleteDepartment = await DeleteDepartment() 
+        case 'Add an employee': 
+            const NewEmployee = await addEmployees()
+            console.table(NewEmployee)
+            break;  
+        case 'Remove Employee': 
+            const DeleteEmployee = await removeEmployee() 
+            console.table(DeleteEmployee) 
+            break;
+        case 'Delete a department': 
+            const DeleteDepartment = await RemoveDepartment() 
             console.table(DeleteDepartment)
             break; 
         case 'Delete a Role': 
-            const DeleteRole = await DeleteRole()
+            const DeleteRole = await RemoveRoles()
             console.table(DeleteRole)
             break;  
 

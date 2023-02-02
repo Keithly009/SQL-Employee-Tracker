@@ -1,4 +1,6 @@
 const db = require("./connection"); 
+const inquirer = require("inquirer");
+const { ViewAllDepartment } = require("./departments");
 
 async function viewAllRoles() { 
    try {
@@ -11,16 +13,32 @@ async function viewAllRoles() {
 } 
 async function AddRole() { 
     try {
-     const Role = await viewAllRoles(); 
-     const { name, } = await inquirer.prompt([
+     const ViewDepartment = await ViewAllDepartment();
+     const { name, info, dept } = await inquirer.prompt([
         {
             type: 'input', 
             Name: 'name', 
-            message: 'Please type the name of hte role you would like to add!'
+            message: 'Please type the name of the role you would like to add!'
+        }, 
+        {
+            type: 'input', 
+            name: 'info',
+            message: 'Please insert any information necessary for the role!' 
+        }, 
+        { 
+            type: 'list', 
+            name: 'dept', 
+            messasge: "Please place the role in the appropriate department", 
+            choices: ViewDepartment.map(dept => { 
+                return { 
+                    value: dept.id,
+                    name: dept.name
+                }
+            })
         }
      ])
-        await db.query(`INSERT INTO role (name) VALUES ("${name}") `)
-        const AddRole = await viewAllRoles(); 
+        await db.query(`INSERT INTO role (name) VALUES ("${name}", "${info}", "${dept}",) `)
+        const Role = await viewAllRoles(); 
          return Role
      } catch (err) {
          console.log(err)

@@ -10,18 +10,17 @@ async function viewAllDepartments() {
     }
 }
 async function AddDepartment(){ 
-    try { 
-        const department = await viewAllDepartments(); 
+    try {  
         const { name, } = await inquirer.prompt ([ 
             {
                 type: 'input', 
-                name: 'title', 
+                name: 'name', 
                 message: "Type in the name of the department you wish to add!"
             }
         ]) 
-            await db.query(`INSERT INTO department (name) VALUES ("${name}")`)
-            const Newdepartment = await viewAllDepartments(); 
-            return Newdepartment 
+            await db.query(`INSERT into department (name) VALUES ("${name}")`)
+            const AddDepartment = await viewAllDepartments(); 
+            return AddDepartment 
     } catch (err) { 
         console.log(err)
     } 
@@ -34,10 +33,10 @@ async function RemoveDepartment(){
         const ViewDepartment = await viewAllDepartments(); 
         const { id } = await inquirer.prompt([
             {
-                type: 'list',  
+                type: 'list', 
+                name: 'id', 
                 message: `Please select a department to remove`,
-                name: 'dept', 
-                choices: viewAllDepartments.map((department) => { 
+                choices: ViewDepartment.map((department) => { 
                     return { 
                         name: department.name, 
                         value: department.id
@@ -45,7 +44,7 @@ async function RemoveDepartment(){
                 }) 
             }
         ]); 
-        await db.query(`REMOVE FROM department WHERE id = ${dept}`); 
+        await db.query(`DELETE FROM department WHERE id = ${id}`); 
         return await viewAllDepartments(); 
     } catch (err) { 
         console.log(err)
