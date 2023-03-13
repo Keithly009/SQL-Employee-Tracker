@@ -2,7 +2,7 @@
 const { prompt } = require("inquirer");
 const db = require("./db/connection");
 const { viewAllDepartments, AddDepartment, RemoveDepartment } = require('./db/departments');
-const { viewAllEmployees, removeEmployee, addEmployees  } = require('./db/employees');
+const { viewAllEmployees, removeEmployee, addEmployees, UpdateEmployee  } = require('./db/employees');
 const { viewAllRoles, AddRole, RemoveRoles } = require('./db/roles');
 // Using the async will help to avoid using .then() methods
 const start = async () => {
@@ -52,8 +52,8 @@ const start = async () => {
             console.table(NewRole) 
             break; 
         case 'Update an employee role': 
-            const UpdateEmployee = await UpdateEmployee()
-            console.table(UpdateEmployee) 
+            const AdjustEmployee = await UpdateEmployee()
+            console.table(AdjustEmployee) 
             break;
         case 'Add an employee': 
             const NewEmployee = await addEmployees()

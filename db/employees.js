@@ -53,7 +53,7 @@ async function addEmployees(){
                 ]
             }
         ])
-        await db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?) `, [firstName, lastName,  Role, Manager])
+        await db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?) `, [firstName, lastName, Role, Manager])
         return viewAllEmployees()
     } catch (err) {
         console.log(err);
@@ -80,6 +80,7 @@ async function removeEmployee(){
                 }) 
             }
         ]); 
+        console.log(id)
         await db.query(`DELETE FROM employee WHERE id = ?`, [id]); 
         return viewAllEmployees(); 
     } catch (err) { 
@@ -87,16 +88,16 @@ async function removeEmployee(){
     } 
 }
 
-async function UpdateEmployee(){ 
+async function UpdateEmployee() { 
     try { 
-        const UpdateEmployee = await viewAllEmployees(); 
+        const ShowEmployee = await viewAllEmployees(); 
         const upRole = await viewAllRoles(); 
         const { UpEmployee, UpRole } = await inquirer.prompt([
             { 
                 type: 'list', 
                 name: 'UpEmployee', 
                 question: 'Please select an Employee to update!', 
-                choices: UpdateEmployee.map((employee)=> { 
+                choices: ShowEmployee.map((employee)=> { 
                     return {
                         value: employee.id,
                         name: `${employee.first_name} ${employee.last_name}`, 
@@ -105,20 +106,25 @@ async function UpdateEmployee(){
             },
             {
                 type: 'list', 
-                name: 'upRole', 
+                name: 'UpRole', 
                 question: 'Please select an Employees Role to Update', 
                 choices: upRole.map((role) => { 
                     return { 
-                        value: role.id, 
-                        name: role.title
+                        name: role.title,
+                        value: role.id 
                     };
                 }),
             },
         ]);
+        await db.query( 
+            `UPDATE employee SET role_id = ${UpRole} WHERE id = ${UpEmployee}`
+        );
+        
+        const UpdateEmployee = await viewAllEmployees(); 
+        return await UpdateEmployee;
     } catch (err) {
         console.log(err)
     }
-
-} 
+}
 
 module.exports = { viewAllEmployees, removeEmployee, addEmployees, UpdateEmployee }

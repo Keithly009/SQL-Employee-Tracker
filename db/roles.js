@@ -1,6 +1,5 @@
 const db = require("./connection"); 
 const inquirer = require("inquirer");
-const { ViewAllDepartment } = require("./departments");
 
 async function viewAllRoles() { 
    try {
@@ -13,8 +12,7 @@ async function viewAllRoles() {
 } 
 async function AddRole() { 
     try {
-     const ViewDepartment = await ViewAllDepartment();
-     const { name, info, dept } = await inquirer.prompt([
+     const { name, info } = await inquirer.prompt([
         {
             type: 'input', 
             Name: 'name', 
@@ -24,31 +22,35 @@ async function AddRole() {
             type: 'input', 
             name: 'info',
             message: 'Please insert any information necessary for the role!' 
-        }, 
-        { 
-            type: 'list', 
-            name: 'dept', 
-            messasge: "Please place the role in the appropriate department", 
-            choices: ViewDepartment.map(dept => { 
-                return { 
-                    value: dept.id,
-                    name: dept.name
-                }
-            })
         }
-     ])
-        await db.query(`INSERT INTO role (name) VALUES ("${name}", "${info}", "${dept}",) `)
-        const Role = await viewAllRoles(); 
-         return Role
+     ]);
+        await db.query(`INSERT INTO role (name) VALUES ("${name}", "${info}") `)
+        const role = await viewAllRoles(); 
+         return role
      } catch (err) {
          console.log(err)
      }
  } 
+
+ 
  async function RemoveRoles() { 
     try {
-     const Role = 
-     await db.query('SELECT * FROM role')
-         return Role
+    const Role = await viewAllRoles();
+    const { rRole } = await inquirer.prompt([ 
+        {
+        type: 'list', 
+        name: 'rRole',
+        message: 'Please select the role that you would like to remove',
+        choices: Role.map((role)=> {
+            return { 
+                name: role.name, 
+                value: role.id
+            }
+        })
+        }
+    ])
+    await db.query(`DELETE FROM role WHERE id = ${rRole} `)
+         return viewAllRoles();
      } catch (err) {
          console.log(err)
      }
